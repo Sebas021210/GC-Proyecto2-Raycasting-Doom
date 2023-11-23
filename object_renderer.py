@@ -14,19 +14,9 @@ class ObjectRenderer:
     def draw(self):
         self.draw_background()
         self.render_game_objects()
-        self.draw_player_health()
-
+        
     def win(self):
         self.screen.blit(self.win_image, (0, 0))
-
-    def game_over(self):
-        self.screen.blit(self.game_over_image, (0, 0))
-
-    def draw_player_health(self):
-        health = str(self.game.player.health)
-
-    def player_damage(self):
-        self.screen.blit(self.blood_screen, (0, 0))
 
     def draw_background(self):
         self.sky_offset = (self.sky_offset + 4.5 * self.game.player.rel) % WIDTH
