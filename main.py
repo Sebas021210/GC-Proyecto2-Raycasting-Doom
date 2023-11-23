@@ -5,7 +5,7 @@ from player import *
 from raycasting import *
 from object_renderer import *
 
-def show_welcome_screen(screen, width, height):
+def show_welcome_screen(screen, width, height, sound):
     font_small = pg.font.Font(None, 45)
 
     # Carga el logo de DOOM
@@ -58,12 +58,25 @@ def show_welcome_screen(screen, width, height):
     return option_selected == 0  # Devuelve True si la opción seleccionada es iniciar el juego
 
 class Sound:
-    def __init__(self, game):
+    def __init__(self, game, welcome_theme_path, game_theme_path):
         self.game = game
         pg.mixer.init()
-        self.path = 'resources/sound/'
-        self.theme = pg.mixer.music.load(self.path + 'theme.mp3')
+        self.theme_welcome_path = welcome_theme_path
+        self.theme_game_path = game_theme_path
         pg.mixer.music.set_volume(0.3)
+        self.welcome_theme_playing = False  # Nueva variable para controlar si el tema de bienvenida está reproduciéndose
+
+    def play_welcome_theme(self):
+        pg.mixer.music.load(self.theme_welcome_path)
+        pg.mixer.music.play(-1)
+        self.welcome_theme_playing = True
+
+    def play_game_theme(self):
+        pg.mixer.music.load(self.theme_game_path)
+        pg.mixer.music.play(-1)
+
+    def stop_music(self):
+        pg.mixer.music.stop()
 
 class Game:
     def __init__(self):
@@ -76,6 +89,9 @@ class Game:
         self.global_trigger = False
         self.global_event = pg.USEREVENT + 0
         pg.time.set_timer(self.global_event, 40)
+        welcome_theme_path = 'resources/sound/TLOU.mp3'
+        game_theme_path = 'resources/sound/theme.mp3'
+        self.sound = Sound(self, welcome_theme_path, game_theme_path)
         self.new_game()
 
     def new_game(self):
@@ -83,8 +99,6 @@ class Game:
         self.player = Player(self)
         self.object_renderer = ObjectRenderer(self)
         self.raycasting = RayCasting(self)
-        self.sound = Sound(self)
-        pg.mixer.music.play(-1)
 
     def update(self):
         self.player.update()
@@ -106,8 +120,12 @@ class Game:
                 self.global_trigger = True
 
     def run(self):
-        if show_welcome_screen(self.screen, WIDTH, HEIGHT):  # Llama a la pantalla de bienvenida
+        # Reproducir música de bienvenida antes de mostrar la pantalla de bienvenida
+        self.sound.play_welcome_theme()
+
+        if show_welcome_screen(self.screen, WIDTH, HEIGHT, self.sound):
             self.new_game()
+            self.sound.play_game_theme()  # Comienza a reproducir el tema del juego
             while True:
                 self.check_events()
                 self.update()
@@ -116,3 +134,4 @@ class Game:
 if __name__ == '__main__':
     game = Game()
     game.run()
+    
