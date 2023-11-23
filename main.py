@@ -1,12 +1,69 @@
 import pygame as pg
 import sys
-from settings import *
-from welcomeScreen import show_welcome_screen
 from map import *
 from player import *
 from raycasting import *
 from object_renderer import *
-from sound import *
+
+def show_welcome_screen(screen, width, height):
+    font_small = pg.font.Font(None, 45)
+
+    # Carga el logo de DOOM
+    doom_logo = pg.image.load("./resources/logo.jpg") 
+
+    logo_rect = doom_logo.get_rect(center=(width // 2, height // 2 - 50))
+
+    start_text = font_small.render("Single Player", True, (255, 255, 255))
+    start_rect = start_text.get_rect(center=(width // 2, height // 2 + 150))  # Ajusta la posición vertical
+
+    quit_text = font_small.render("Quit Game", True, (255, 255, 255))
+    quit_rect = quit_text.get_rect(center=(width // 2, height // 2 + 200))  # Ajusta la posición vertical
+
+    screen.fill((0, 0, 0))
+    screen.blit(doom_logo, logo_rect)
+    screen.blit(start_text, start_rect)
+    screen.blit(quit_text, quit_rect)
+    pg.display.flip()  # Actualiza la pantalla
+
+    option_selected = 0  # 0 para iniciar, 1 para salir
+
+    waiting_for_key = True
+    while waiting_for_key:
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+                sys.exit()
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_UP:
+                    option_selected = (option_selected - 1) % 2
+                elif event.key == pg.K_DOWN:
+                    option_selected = (option_selected + 1) % 2
+                elif event.key == pg.K_RETURN:
+                    waiting_for_key = False
+
+        # Resalta la opción seleccionada
+        start_text = font_small.render("Single Player", True, (255, 255, 255))
+        quit_text = font_small.render("Quit Game", True, (255, 255, 255))
+        if option_selected == 0:
+            start_text = font_small.render("Single Player", True, (255, 0, 0))
+        else:
+            quit_text = font_small.render("Quit Game", True, (255, 0, 0))
+
+        screen.fill((0, 0, 0))
+        screen.blit(doom_logo, logo_rect)
+        screen.blit(start_text, start_rect)
+        screen.blit(quit_text, quit_rect)
+        pg.display.flip()
+
+    return option_selected == 0  # Devuelve True si la opción seleccionada es iniciar el juego
+
+class Sound:
+    def __init__(self, game):
+        self.game = game
+        pg.mixer.init()
+        self.path = 'resources/sound/'
+        self.theme = pg.mixer.music.load(self.path + 'theme.mp3')
+        pg.mixer.music.set_volume(0.3)
 
 class Game:
     def __init__(self):
