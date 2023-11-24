@@ -6,18 +6,18 @@ from raycasting import *
 from object_renderer import *
 
 def show_welcome_screen(screen, width, height, sound):
-    font_small = pg.font.Font(None, 45)
+    font_small = pg.font.Font(None, 55)
 
     # Carga el logo de DOOM
-    doom_logo = pg.image.load("./resources/logo.jpg") 
+    doom_logo = pg.image.load("./resources/TLOU-logo.png") 
 
     logo_rect = doom_logo.get_rect(center=(width // 2, height // 2 - 50))
 
-    start_text = font_small.render("Single Player", True, (255, 255, 255))
-    start_rect = start_text.get_rect(center=(width // 2, height // 2 + 150))  # Ajusta la posición vertical
+    start_text = font_small.render("Single Player", True, (150, 150, 150))
+    start_rect = start_text.get_rect(center=(width // 2, height // 2 + 250))  # Ajusta la posición vertical
 
-    quit_text = font_small.render("Quit Game", True, (255, 255, 255))
-    quit_rect = quit_text.get_rect(center=(width // 2, height // 2 + 200))  # Ajusta la posición vertical
+    quit_text = font_small.render("Quit Game", True, (150, 150, 150))
+    quit_rect = quit_text.get_rect(center=(width // 2, height // 2 + 310))  # Ajusta la posición vertical
 
     screen.fill((0, 0, 0))
     screen.blit(doom_logo, logo_rect)
@@ -42,12 +42,12 @@ def show_welcome_screen(screen, width, height, sound):
                     waiting_for_key = False
 
         # Resalta la opción seleccionada
-        start_text = font_small.render("Single Player", True, (255, 255, 255))
-        quit_text = font_small.render("Quit Game", True, (255, 255, 255))
+        start_text = font_small.render("Single Player", True, (150, 150, 150))
+        quit_text = font_small.render("Quit Game", True, (150, 150, 150))
         if option_selected == 0:
-            start_text = font_small.render("Single Player", True, (255, 0, 0))
+            start_text = font_small.render("Single Player", True, (255, 255, 255))
         else:
-            quit_text = font_small.render("Quit Game", True, (255, 0, 0))
+            quit_text = font_small.render("Quit Game", True, (255, 255, 255))
 
         screen.fill((0, 0, 0))
         screen.blit(doom_logo, logo_rect)
@@ -90,7 +90,7 @@ class Game:
         self.global_event = pg.USEREVENT + 0
         pg.time.set_timer(self.global_event, 40)
         welcome_theme_path = 'resources/sound/TLOU.mp3'
-        game_theme_path = 'resources/sound/theme.mp3'
+        game_theme_path = 'resources/sound/game.mp3'
         self.sound = Sound(self, welcome_theme_path, game_theme_path)
         self.new_game()
 
