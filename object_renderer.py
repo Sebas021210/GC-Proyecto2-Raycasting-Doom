@@ -11,9 +11,29 @@ class ObjectRenderer:
         self.digit_size = 90
         self.win_image = self.get_texture('resources/textures/win.png', RES)
 
+    def draw_mini_map(self):
+        mini_map_size = 200
+        mini_map = pg.Surface((mini_map_size, mini_map_size))
+        mini_map.set_alpha(200)
+        mini_map.fill((0, 0, 0))
+
+        # Dibujar las paredes del minimapa
+        for y, row in enumerate(self.game.map.mini_map):
+            for x, tile_value in enumerate(row):
+                if tile_value:
+                    pg.draw.rect(mini_map, 'darkgray', (x * 10, y * 10, 10, 10))
+
+        # Dibujar la posición del jugador
+        player_x, player_y = self.game.player.map_pos
+        pg.draw.rect(mini_map, 'red', (player_x * 10, player_y * 10, 10, 10))
+
+        # Dibujar el minimapa en la esquina superior izquierda
+        self.screen.blit(mini_map, (10, 10))
+
     def draw(self):
         self.draw_background()
         self.render_game_objects()
+        self.draw_mini_map()
         
     def win(self):
         self.screen.blit(self.win_image, (0, 0))
