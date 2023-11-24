@@ -63,7 +63,7 @@ class Sound:
         pg.mixer.init()
         self.theme_welcome_path = welcome_theme_path
         self.theme_game_path = game_theme_path
-        pg.mixer.music.set_volume(0.3)
+        pg.mixer.music.set_volume(0.5)
         self.welcome_theme_playing = False  # Nueva variable para controlar si el tema de bienvenida está reproduciéndose
 
     def play_welcome_theme(self):

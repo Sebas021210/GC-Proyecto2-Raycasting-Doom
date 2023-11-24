@@ -11,6 +11,8 @@ class Player:
         self.rel = 0
         self.time_prev = pg.time.get_ticks()
         self.diag_move_corr = 1 / math.sqrt(2)
+        self.wall_sound = pg.mixer.Sound('resources/sound/Clicker.mp3')
+        self.wall_sound.set_volume(0.2)
 
     def single_fire_event(self, event):
         if event.type == pg.MOUSEBUTTONDOWN:
@@ -61,6 +63,8 @@ class Player:
             self.x += dx
         if self.check_wall(int(self.x), int(self.y + dy * scale)):
             self.y += dy
+        if self.game.map.world_map.get((int(self.x + dx*scale), int(self.y)), 0) == 4:
+            self.wall_sound.play()
 
     def draw(self):
         pg.draw.line(self.game.screen, 'yellow', (self.x * 100, self.y * 100),
